@@ -1,88 +1,92 @@
-<img src="robot_blackboard.png"
-     width="300" />
+---
+author:
+- Sachit Kuhar
+date: 2023-02-13
+title: CS7545 Lecture 9
+---
 
-### Course Information
+# Rademacher complexity
 
-* **Course Info:**	CS7545, Spring 2023
-* **Instructor:**	
-* **Course Time&Place:**	TuTh 3:30-4:45pm, Weber SST III (Lecture Hall 1)
-* **TA Office Hours:** We have office hours every Monday. Normally, we have one hour per week for the office hours (virtual office hours). In the homework submission weeks, we have three hours per week for the office hours (in-person office hours).  
-    - *Date: 1/23, 2/6, 2/13, 2/27, 3/6, 4/3, 4/10, 4/24*
-        - Monday 7pm-8pm (virtual office hours)
-    - *Date: 1/30, 2/20, 3/13, 3/27, 4/17*
-        - Monday 2pm-5pm (in-person office hours), CODA 2nd floor
-    - *This week's zoom link*
-        - [https://gatech.zoom.us/j/3216894294?pwd=YnJUd0lDVmI3YkNraDd1SnQrQlU5Zz09](https://gatech.zoom.us/j/3216894294?pwd=YnJUd0lDVmI3YkNraDd1SnQrQlU5Zz09)
-* **Course Staff**:
-    - *Jacob Abernethy*
-        - **Office:**  Coda S1221
-        - **Email:** prof_at_gatech_dot_edu
-        - **Office Hours:** TBD
-    - *Zihao Hu*
-        - **Email:** zihaohu_at_gatech_dot_edu
-        - **Office Hours**: Monday 7pm-8pm(1/23, 4/3), Monday 2pm-5pm (1/30, 3/27)
-    - *Yeojoon Youn*
-        - **Email:** yjyoun92_at_gatech_dot_edu
-        - **Office Hours**: Monday 7pm-8pm(2/6, 2/13, 4/10), Monday 2pm-5pm (2/20, 3/27)
-    - *Guanghui Wang*
-        - **Email:** gwang369_at_gatech_dot_edu
-        - **Office Hours:** Monday 7pm-8pm(2/27, 3/6, 4/24), Monday 2pm-5pm (3/13, 3/27)
-    - *Tyler Labonte*
-        - **Email:** tlabonte_gatech_dot_edu
+Let $F=\{f: x \rightarrow \mathbb{R}\}$ and $s=\{(x_i, y_i)\}_{i-1}^m \sim D^m$
 
-### Course Description
+We assume $\sigma_i= \begin{cases}1 & wp=1/2 \\
+-1 & wp=-1 / 2\end{cases}$
 
-This course will study theoretical aspects of prediction and decision-making probelms, and to explore the mathematical underpinnings of machine learning. We hope to bring students to the frontiers of research and to develop tools that can be used to contribute to emerging literature. The course will cover, among other things, concentration inequalities, uniform deviation bounds, Vapnik-Chervonenkis Theory, Rademacher Complexity, margin bounds, boosting, some theoretical aspects of deep learning, online learning theory, regret minimization, multi-armed bandit algorithms, and connections to convex optimization. Additional topics may be covered if time permits, including reinforcement learning theory, differential privacy, sampling, and and other areas of interest. 
+Rademacher complexity is
+$\hat{\mathbb{R}}_s(F)=\underset{\sigma}{E}[\sup _{f \in F} \frac{1}{m} \sum_{i=1}^m r f(x_i)]$
 
-**Prerequisites:** Familiarity with the analysis of algorithms, probabilistic analysis, and several similar topics. CS7641 (Machine Learning) may be helpful but not strictly necessary. The material will be about 90% "theory" and thus students must have a strong mathematical background. We shall rely heavily on techniques from calculus, probability, and convex analysis, but many tools will be reviewed in lecture.
+Definition for a set of vectors $A \subseteq \mathbb{R}^m$, and
+$a=(a_1, a_2, \ldots, a_m)$.
 
-**Coursework:** There will be 4 problem sets throughout the semester.
+The Rademacher complexity of $A$ is:
+$R(A)=\underset{\sigma}{E}[\sup _{a \in A} \frac{1}{m} \sum_{i=1}^m \sigma_i a_i]$
 
-**Grade Breakdown:**
-* 40% - *Homeworks*
-* 30% - *Exam*
-* 20% - *Final project*
-* 10% - *Scribing/participation*
+We could set $A=\{(f(x_1), \ldots, f(x_m)), f \in F\}$
 
-**Note**: The exam will be held on Thursday March 30 during classtime.
+# Why Rademacher complexity?
 
-### Lecture notes
+1.  Nice properties / lemmas \"Rademacher calculus\"
 
-Every lecture will have two student scribes, and this pair of students will be asked to take detailed notes in class on what was covered. The quality of these notes will be graded! 
+2.  Nearly tight bound on
+    $\sup _{f \in F}\left|L(f)-\hat{L}_s(f)\right|$
 
-**Grade Rubric:**
-* 20% - *punctuality*
-* 40% - *correctness*
-* 40% - *readability*
+# Properties of Rademacher complexity?
 
-[Here is the course wiki](https://github.com/mltheory/CS7545/wiki).
+1.  $R(c A)=|c| R(A)$ $where \hspace{10pt} cA=\{c*a : a \in A\}$\
 
-Note: all students are allowed and encouraged to contribute to this wiki! Once the scribes have submitted their notes, other students are welcome to add any additional comments, results, material, etc. to the lecture notes. It would be great if the wiki provides a broad set of resources for students, beyond what was covered in lecture.
+2.  $A^{\prime} \subseteq A \Rightarrow R\left(A^{\prime}\right) \leq R(A)$\
 
+3.  $R\left(A+A^{\prime}\right)=R(A)+R\left(A^{\prime}\right)$\
+    where Minkowski Sum is
+    $A+A^{\prime}=\left\{a+a^{\prime}: a \in A, a^{\prime} \in A^{\prime}\right\}$\
 
-### References:
+4.  $R(\operatorname{Conv}(A))=R(A)$\
+    \
+    $\text {where  Conv }(.) \text { is convex hull }$ and
+    $\operatorname{conv}(A)=\left\{\sum w_i a_i, \quad \sum w_i=1 \text{ and } w_i>=0 \right\}$.
 
-Roughly half of the course will follow material from the following text:
+5.  Massart's Lemma: If $|A|<\infty$,
+    $R(A)=\max _{a \in A}\|a\|_2\frac{\sqrt{2 \log |A|}}{m .}$\
 
- * "[Foundations of Machine Learning](https://www.amazon.com/Foundations-Machine-Learning-Adaptive-Computation/dp/026201825X)" by Mehryar Mohri, Afshin Rostamizadeh, and Ameet Talwalkar
- * "[Understanding Machine Learning: From Theory to Algorithms](https://www.cs.huji.ac.il/~shais/UnderstandingMachineLearning/understanding-machine-learning-theory-algorithms.pdf)" by Shai Shalev-Shwartz and Shai Ben-David
+6.  Talagrad's contraction lemma: If
+    $\phi: \mathbb{R} \rightarrow \mathbb{R}$ is L-Lipschitz, then
+    $R(\phi(A)) \leq \operatorname{LR}(A)$\
+    \
+    where $\phi(A)=\{\phi(a): a \in A\}$ and
+    $\phi(a)=\left(\phi_1\left(a_1\right), \phi_2\left(a_2\right), \ldots, \phi_m\left(a_m\right)\right)$\
+    \
+    and the definition of $\phi_i$ that is $L-L_{i p s c h i t z}$ in
+    $R$ is $|\phi_i(x)-\phi_i(y)| \leqslant L|x-y|$\
 
-Much of the material in online learning is specific to this course. For students that want more in-depth reading material on this topic, however, there are several surveys released in the last several years that explore several many areas we shall cover. These include:
+# Proof of Massart's Lemma
 
-* [The Multiplicative Weights Update Method](http://www.cs.princeton.edu/~arora/pubs/MWsurvey.pdf) by Sanjeev Arora, Elad Hazan, and Satyen Kale.
-* [Online Learning and Online Convex Optimization survey](http://www.cs.huji.ac.il/~shais/papers/OLsurvey.pdf) by Shai Shalev-Shwartz.
-* [The convex optimization approach to regret minimization survey](http://www.cs.princeton.edu/~ehazan/papers/OCO-survey.pdf) by Elad Hazan.
-* [Sasha Rakhlin's Lecture Notes](http://www-stat.wharton.upenn.edu/~rakhlin/courses/stat928/stat928_notes.pdf).
+Study
+$A^{\prime}=\\{\lambda a : a \in A\\}, \lambda \in \mathbb{R}$
 
-[The Latex template for HW submissions is available here.](./hw/CS7545hw_template.tex)
+$$\begin{aligned}
+& m R(A^{\prime})={\mathbb{E}}_\sigma[\max _{a^{\prime} \in A^{\prime}} \sum_{i=1}^m \sigma_i a_i^{\prime}] \\
+& ={\mathbb{E}}_\sigma[\log \max _{a^{\prime} \in A^{\prime}} \exp (\sum_{i=1}^m \sigma_i a_i^{\prime})] \\
+& \leq {\mathbb{E}}_\sigma[\log \sum_{a^{\prime} \in A^{\prime}} \exp (\sum_{i=1}^m \sigma_i a_i^{\prime})] \\
+\end{aligned}$$ 
 
-Previous offerings of the course: 
-- [Fall 2018](./Fall18)
-- [Fall 2019](./Fall19)
+By Jensen's inequality, we have: $$\begin{aligned}
+& \leqslant \log \mathbb{E}_\sigma[\sum_{a^{\prime} \in A^{\prime}} \exp (\sum_{i=1}^m \sigma_i a_i^{\prime})] \\
+& =\log \mathbb{E}_\sigma[\sum_{a^{\prime} \in A^{\prime}} \prod_{i=1}^m \exp (\sigma_i a_i^{\prime})] \\
+& =\log \sum_{a^{\prime} \in A^{\prime}} \prod_{i=1}^m \mathbb{E}_{\sigma_i}[\exp (\sigma_i, a_i^{\prime})] \\
+\end{aligned}$$ 
 
-### Homeworks
-
-| Homework | Due Date  | 
-| :------------: |:-------------: |
-| [Homework 1](./hw/CS7545_HW1.pdf) | January 31, 2023, 11:59 pm |
-| [Homework 2](./hw/CS7545_HW2.pdf) | February 21, 2023, 11:59 pm |
+We know that $$\begin{aligned}
+& \mathbb{E}_{\sigma_i}\left[\exp \left(\sigma_i, a_i^{\prime}\right)\right]=\frac{1}{2} \exp \left(a_i^{\prime}\right)+\frac{1}{2} \exp \left(-a_i^{\prime}\right) \leq \exp \left(\frac{a_i^2}{2}\right) \\
+\end{aligned}$$ Hence, $$\begin{aligned}
+& m R\left(A^{\prime}\right)=\log \sum_{a^{\prime} \in A^{\prime}} \prod_{i=1}^m \exp \left(\frac{a_i^{\prime 2}}{2}\right) \\
+& =\log \sum_{a^{\prime} \in A^{\prime}} \exp \left(\frac{\left\|a^{\prime}\right\|_2^2}{2}\right) \\
+& \leqslant \log \left|A^{\prime}\right| \max _{a^{\prime} \in A^{\prime}} \exp \left(\frac{\left\|a^{\prime}\right\|_2^2}{2}\right) \\
+& =\log \left|A^{\prime}\right|+\log \max _{a^{\prime} \in A^{\prime}}\left(\exp \left(\frac{\left\|a^{\prime}\right\|_2^2}{2}\right)\right). \\
+& =\log \left|A^{\prime}\right|+\max _{a^{\prime} \in A^{\prime}} \frac{\left\|a^{\prime}\right\|_2^2}{2} 
+\end{aligned}$$ By property 1, we have
+$R(A) =\frac{1}{\lambda} R\left(A^{\prime}\right)$. Therefore, we have
+$$\begin{aligned}
+R(A) & \leq \frac{\log \left|A^{\prime}\right|+\lambda^2 \max_{a \in A} \frac{\|a\|_2^2}{2}}{\lambda m} \\
+\text{Pick } & \lambda=\sqrt{\frac{2 \log |A|}{\max\|a\|^2}} \\
+R(A) & \leq \max_{a \in A}\|a\|_2 \frac{\sqrt{2 \log |A|}}{m .}
+\end{aligned}$$
